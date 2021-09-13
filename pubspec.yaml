@@ -26,6 +26,10 @@ dependencies:
   flutter_youtube_downloader: ^0.0.5
   permission_handler: ^8.1.6
   youtube_video_info: ^1.0.0
+  flutter_insta: ^1.0.0
+  instagram_public_api: ^0.2.3
+  flutter_downloader: ^1.7.0
+  path_provider: ^2.0.3
 
 
   # The following adds the Cupertino Icons font to your application.
