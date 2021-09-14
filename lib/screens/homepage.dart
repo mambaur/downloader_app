@@ -1,12 +1,8 @@
-import 'dart:isolate';
-import 'dart:ui';
-
+import 'package:downloader/screens/instagram/instagram_downloader.dart';
 import 'package:downloader/screens/youtube_downloader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_insta/flutter_insta.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,73 +12,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  FlutterInsta flutterInsta = FlutterInsta();
-  ReceivePort _port = ReceivePort();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController reelController =
-      TextEditingController(text: 'https://www.instagram.com/p/CDlGkdZgB2y');
+  final PageStorageBucket bucket = PageStorageBucket();
+  Widget? currentScreen;
   int currentTab = 0;
-  int progress = 0;
-  bool downloading = false;
+  String titleBar = 'Instagram Downloader';
 
   final List<Widget> screens = [
-    Center(
-      child: Text('Index 0'),
-    ),
+    InstagramDownloader(),
     YoutubeDownloader(),
     Center(
-      child: Text('Index 2'),
+      child: Text('News'),
     ),
     Center(
-      child: Text('Index 3'),
+      child: Text('Help'),
     ),
   ];
 
-  downloadReels() async {
-    var reels = await flutterInsta
-        .downloadReels("https://www.instagram.com/p/CDlGkdZgB2y");
-    print(reels);
-  }
-
-  final PageStorageBucket bucket = PageStorageBucket();
-  Widget? currentScreen;
-
   @override
   void initState() {
-    currentScreen = reelPage();
-    IsolateNameServer.registerPortWithName(
-        _port.sendPort, 'downloader_send_port');
-    _port.listen((dynamic data) {
-      // String id = data[0];
-      // DownloadTaskStatus status = data[1];
-      progress = data[2];
-      setState(() {});
-    });
-
-    FlutterDownloader.registerCallback(downloadCallback);
+    currentScreen = screens[0];
 
     super.initState();
   }
 
   @override
-  void dispose() {
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
-    super.dispose();
-  }
-
-  static void downloadCallback(
-      String id, DownloadTaskStatus status, int progress) {
-    final SendPort? send =
-        IsolateNameServer.lookupPortByName('downloader_send_port');
-    send!.send([id, status, progress]);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // status bar color
+    ));
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Downloader Social'),
+        title: Text(titleBar),
         elevation: 0,
         centerTitle: true,
       ),
@@ -93,9 +54,7 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () async {
-          await downloadReels();
-        },
+        onPressed: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -111,111 +70,66 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: () {
-                        currentScreen = reelPage();
-                        currentTab = 0;
-                        setState(() {});
-                      },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.dashboard,
-                            color: currentTab == 0 ? Colors.blue : Colors.grey,
-                          ),
-                          // Text('Dashboard',
-                          //     style: TextStyle(
-                          //         color: currentTab == 0
-                          //             ? Colors.blue
-                          //             : Colors.grey))
-                        ],
-                      ),
+                    Expanded(
+                      child: MenuIcon(
+                          title: 'Instagram',
+                          icon: FontAwesomeIcons.instagram,
+                          color: currentTab == 0 ? Colors.blue : Colors.grey,
+                          onTap: () {
+                            setState(() {
+                              currentScreen = screens[0];
+                              currentTab = 0;
+                              titleBar = 'Instagram Downloader';
+                            });
+                          }),
                     ),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: () {
-                        currentScreen = YoutubeDownloader();
-                        currentTab = 1;
-                        setState(() {});
-                      },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.play_circle_outline,
-                            color: currentTab == 1 ? Colors.blue : Colors.grey,
-                          ),
-                          // Text('Dashboard',
-                          //     style: TextStyle(
-                          //         color: currentTab == 1
-                          //             ? Colors.blue
-                          //             : Colors.grey))
-                        ],
-                      ),
+                    Expanded(
+                      child: MenuIcon(
+                          title: 'Youtube',
+                          icon: Icons.play_circle_outline,
+                          color: currentTab == 1 ? Colors.blue : Colors.grey,
+                          onTap: () {
+                            setState(() {
+                              currentScreen = screens[1];
+                              currentTab = 1;
+                              titleBar = 'Youtube Downloader';
+                            });
+                          }),
                     ),
-                    Container()
                   ],
                 ),
               ),
+              Expanded(child: Container()),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: () {
-                        currentScreen = Center(
-                          child: Text('Index 2'),
-                        );
-                        currentTab = 2;
-                        setState(() {});
-                      },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.share,
-                            color: currentTab == 2 ? Colors.blue : Colors.grey,
-                          ),
-                          // Text('Share',
-                          //     style: TextStyle(
-                          //         color: currentTab == 2
-                          //             ? Colors.blue
-                          //             : Colors.grey))
-                        ],
-                      ),
+                    Expanded(
+                      child: MenuIcon(
+                          title: 'News',
+                          icon: FontAwesomeIcons.newspaper,
+                          color: currentTab == 2 ? Colors.blue : Colors.grey,
+                          onTap: () {
+                            setState(() {
+                              currentScreen = screens[2];
+                              currentTab = 2;
+                              titleBar = 'News';
+                            });
+                          }),
                     ),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: () {
-                        currentScreen = Center(
-                          child: Text('Index 3'),
-                        );
-                        currentTab = 3;
-                        setState(() {});
-                      },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.account_circle,
-                            color: currentTab == 3 ? Colors.blue : Colors.grey,
-                          ),
-                          // Text('Dashboard',
-                          //     style: TextStyle(
-                          //         color: currentTab == 3
-                          //             ? Colors.blue
-                          //             : Colors.grey))
-                        ],
-                      ),
-                    )
+                    Expanded(
+                      child: MenuIcon(
+                          title: 'Help',
+                          icon: FontAwesomeIcons.questionCircle,
+                          color: currentTab == 3 ? Colors.blue : Colors.grey,
+                          onTap: () {
+                            setState(() {
+                              currentScreen = screens[3];
+                              currentTab = 3;
+                              titleBar = 'Help';
+                            });
+                          }),
+                    ),
                   ],
                 ),
               )
@@ -225,65 +139,39 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
 
-  //Reel Downloader page
-  Widget reelPage() {
-    return Container(
-      margin: EdgeInsets.all(10),
+class MenuIcon extends StatelessWidget {
+  final Function()? onTap;
+  final Color? color;
+  final IconData? icon;
+  final String? title;
+  const MenuIcon({Key? key, this.onTap, this.color, this.icon, this.title})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      padding: EdgeInsets.zero,
+      // constraints: BoxConstraints(),
+      onPressed: onTap ?? () {},
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextField(
-            controller: reelController,
+          Icon(
+            icon ?? Icons.home,
+            color: color ?? Colors.grey,
+            // color: currentTab == 3 ? Colors.blue : Colors.grey,
           ),
-          ElevatedButton(
-            onPressed: () async {
-              setState(() {
-                downloading = true; //set to true to show Progress indicator
-              });
-              await download();
-            },
-            child: Text("Download"),
+          SizedBox(
+            height: 3,
           ),
-          Text('Progress'),
-          Text(progress.toString()),
-          downloading
-              ? Center(
-                  child:
-                      CircularProgressIndicator(), //if downloading is true show Progress Indicator
-                )
-              : Container()
+          Text(title ?? 'Home',
+              style: TextStyle(
+                  color: color ?? Colors.grey,
+                  fontSize: MediaQuery.of(context).size.width * 0.035))
         ],
       ),
     );
-  }
-
-  //Download reel video on button clickl
-  download() async {
-    var myvideourl = await flutterInsta.downloadReels(reelController.text);
-
-    if (await Permission.storage.request().isGranted) {
-      print('Permission granted');
-
-      final baseStorage = await getExternalStorageDirectory();
-
-      print(baseStorage!.path);
-
-      await FlutterDownloader.enqueue(
-        url: '$myvideourl',
-        savedDir: baseStorage.path,
-        fileName: DateTime.now().millisecondsSinceEpoch.toString() + '.mp4',
-        showNotification: true,
-        openFileFromNotification: true,
-      ).whenComplete(() {
-        setState(() {
-          downloading = false; // set to false to stop Progress indicator
-        });
-      });
-    } else if (await Permission.storage.request().isPermanentlyDenied) {
-      await openAppSettings();
-    } else if (await Permission.storage.request().isDenied) {
-      print('Permission denied');
-    }
   }
 }

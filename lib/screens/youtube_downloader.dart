@@ -23,22 +23,19 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> extractYoutubeLink() async {
-    String link;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      link = await FlutterYoutubeDownloader.extractYoutubeLink(
+      _extractedLink = await FlutterYoutubeDownloader.extractYoutubeLink(
           linkController.text, 18);
     } on PlatformException {
-      link = 'Failed to Extract YouTube Video Link.';
+      _extractedLink = 'Failed to Extract YouTube Video Link.';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    _extractedLink = link;
-    print(_extractedLink);
+    // print(_extractedLink);
   }
 
   Future<void> downloadVideo() async {
