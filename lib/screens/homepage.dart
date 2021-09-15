@@ -1,3 +1,5 @@
+import 'package:downloader/screens/articles/article_screen.dart';
+import 'package:downloader/screens/helps/help_screen.dart';
 import 'package:downloader/screens/instagram/instagram_downloader.dart';
 import 'package:downloader/screens/youtube_downloader.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +22,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> screens = [
     InstagramDownloader(),
     YoutubeDownloader(),
-    Center(
-      child: Text('News'),
-    ),
-    Center(
-      child: Text('Help'),
-    ),
+    ArticleScreen(),
+    HelpScreen(),
   ];
 
   @override
@@ -42,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     ));
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(titleBar),
         elevation: 0,
@@ -67,12 +66,13 @@ class _HomePageState extends State<HomePage> {
             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
+                flex: 3,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
                       child: MenuIcon(
-                          title: 'Instagram',
+                          title: 'Insta',
                           icon: FontAwesomeIcons.instagram,
                           color: currentTab == 0 ? Colors.blue : Colors.grey,
                           onTap: () {
@@ -99,8 +99,9 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Expanded(child: Container()),
+              Expanded(flex: 2, child: Container()),
               Expanded(
+                flex: 3,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

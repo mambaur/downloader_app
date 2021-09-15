@@ -1,17 +1,13 @@
-import 'package:downloader/screens/instagram/post_downloader.dart';
-import 'package:downloader/screens/instagram/reels_downloader.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class InstagramDownloader extends StatefulWidget {
-  const InstagramDownloader({Key? key}) : super(key: key);
+class HelpScreen extends StatefulWidget {
+  const HelpScreen({Key? key}) : super(key: key);
 
   @override
-  _InstagramDownloaderState createState() => _InstagramDownloaderState();
+  _HelpScreenState createState() => _HelpScreenState();
 }
 
-class _InstagramDownloaderState extends State<InstagramDownloader>
-    with TickerProviderStateMixin {
+class _HelpScreenState extends State<HelpScreen> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -25,19 +21,24 @@ class _InstagramDownloaderState extends State<InstagramDownloader>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
         title: TabBar(
+          labelColor: Colors.blue,
+          indicatorColor: Colors.blue,
           controller: _tabController,
+          unselectedLabelColor: Colors.grey,
           tabs: <Widget>[
             Tab(
               icon: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(FontAwesomeIcons.instagram),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text('Reels')
+                  Expanded(
+                      child: Text(
+                    'Download Instagram',
+                    textAlign: TextAlign.center,
+                  ))
                 ],
               ),
             ),
@@ -46,11 +47,11 @@ class _InstagramDownloaderState extends State<InstagramDownloader>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(FontAwesomeIcons.clone),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text('Post')
+                  Expanded(
+                      child: Text(
+                    'Download Youtube',
+                    textAlign: TextAlign.center,
+                  ))
                 ],
               ),
             ),
@@ -59,10 +60,7 @@ class _InstagramDownloaderState extends State<InstagramDownloader>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[
-          ReelsDownloader(),
-          PostDownloader(),
-        ],
+        children: <Widget>[Container(), Container()],
       ),
     );
   }
