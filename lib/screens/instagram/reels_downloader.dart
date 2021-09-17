@@ -1,9 +1,11 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_insta/flutter_insta.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -20,10 +22,15 @@ class _ReelsDownloaderState extends State<ReelsDownloader> {
   TextEditingController reelController =
       TextEditingController(text: 'https://www.instagram.com/p/CDlGkdZgB2y');
   int progress = 0;
-  bool downloading = false;
 
   @override
   void initState() {
+    FlutterClipboard.paste().then((value) {
+      setState(() {
+        reelController.text = value;
+      });
+    });
+
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
@@ -54,24 +61,67 @@ class _ReelsDownloaderState extends State<ReelsDownloader> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          TextField(
-            controller: reelController,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(5)),
+            child: TextField(
+              controller: reelController,
+              decoration: InputDecoration(
+                  hintText: "Paste your link here...",
+                  suffixIconConstraints: BoxConstraints(
+                    minWidth: 25,
+                    minHeight: 25,
+                  ),
+                  suffixIcon: GestureDetector(
+                      onTap: () => reelController.clear(),
+                      child: Icon(Icons.close)),
+                  border: InputBorder.none),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              setState(() {
-                downloading = true; //set to true to show Progress indicator
-              });
-              await downloadReels();
-            },
-            child: Text("Download Reels"),
+          SizedBox(
+            height: 5,
           ),
-          downloading
-              ? Center(
-                  child:
-                      CircularProgressIndicator(), //if downloading is true show Progress Indicator
-                )
-              : Container()
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      onPrimary: Theme.of(context).primaryColor,
+                      primary: Colors.grey.shade200,
+                      elevation: 0),
+                  onPressed: () async {
+                    FlutterClipboard.paste().then((value) {
+                      if (value == '') {
+                        Fluttertoast.showToast(msg: 'No link detected');
+                      } else {
+                        setState(() {
+                          reelController.text = value;
+                        });
+                      }
+                    });
+                  },
+                  child: Text(
+                    "Paste Link",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 0),
+                  onPressed: () async {
+                    await downloadReels();
+                  },
+                  child: Text("Download Reels"),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -95,9 +145,7 @@ class _ReelsDownloaderState extends State<ReelsDownloader> {
         showNotification: true,
         openFileFromNotification: true,
       ).whenComplete(() {
-        setState(() {
-          downloading = false; // set to false to stop Progress indicator
-        });
+        // do something
       });
     } else if (await Permission.storage.request().isPermanentlyDenied) {
       await openAppSettings();

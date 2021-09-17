@@ -1,7 +1,9 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:youtube_video_info/youtube.dart';
 
@@ -64,6 +66,12 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
 
   @override
   void initState() {
+    FlutterClipboard.paste().then((value) {
+      setState(() {
+        linkController.text = value;
+      });
+    });
+
     extractYoutubeLink();
     super.initState();
   }
@@ -73,21 +81,71 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
     return Scaffold(
       body: Center(
         // child: Text('Extracted Link : $_extractedLink\n'),
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(15),
-              child: TextField(
-                controller: linkController,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Youtube URL'),
+        child: Container(
+          margin: EdgeInsets.all(15),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: linkController,
+                  decoration: InputDecoration(
+                      hintText: "Paste your link here...",
+                      suffixIconConstraints: BoxConstraints(
+                        minWidth: 25,
+                        minHeight: 25,
+                      ),
+                      suffixIcon: GestureDetector(
+                          onTap: () => linkController.clear(),
+                          child: Icon(Icons.close)),
+                      border: InputBorder.none),
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: downloadVideo,
-              child: Text("Download"),
-            ),
-          ],
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          onPrimary: Theme.of(context).primaryColor,
+                          primary: Colors.grey.shade200,
+                          elevation: 0),
+                      onPressed: () async {
+                        FlutterClipboard.paste().then((value) {
+                          if (value == '') {
+                            Fluttertoast.showToast(msg: 'No link detected');
+                          } else {
+                            setState(() {
+                              linkController.text = value;
+                            });
+                          }
+                        });
+                      },
+                      child: Text(
+                        "Paste Link",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 0),
+                      onPressed: downloadVideo,
+                      child: Text("Download"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,11 +1,13 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:instagram_public_api/instagram_public_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class PostDownloader extends StatefulWidget {
   const PostDownloader({Key? key}) : super(key: key);
@@ -16,9 +18,7 @@ class PostDownloader extends StatefulWidget {
 
 class _PostDownloaderState extends State<PostDownloader> {
   ReceivePort _port = ReceivePort();
-  final postController = TextEditingController(
-      text:
-          "https://www.instagram.com/p/CJXZ0MtJdh8/?utm_source=ig_web_copy_link");
+  final postController = TextEditingController();
   List<InstaPost> posts = [];
 
   Future _getInstaPosts() async {
@@ -43,6 +43,12 @@ class _PostDownloaderState extends State<PostDownloader> {
 
   @override
   void initState() {
+    FlutterClipboard.paste().then((value) {
+      setState(() {
+        postController.text = value;
+      });
+    });
+
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
@@ -72,14 +78,66 @@ class _PostDownloaderState extends State<PostDownloader> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          TextField(
-            controller: postController,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(5)),
+            child: TextField(
+              controller: postController,
+              decoration: InputDecoration(
+                  hintText: "Paste your link here...",
+                  suffixIconConstraints: BoxConstraints(
+                    minWidth: 25,
+                    minHeight: 25,
+                  ),
+                  suffixIcon: GestureDetector(
+                      onTap: () => postController.clear(),
+                      child: Icon(Icons.close)),
+                  border: InputBorder.none),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              await _getInstaPosts();
-            },
-            child: Text("Download Posts"),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      onPrimary: Theme.of(context).primaryColor,
+                      primary: Colors.grey.shade200,
+                      elevation: 0),
+                  onPressed: () async {
+                    FlutterClipboard.paste().then((value) {
+                      if (value == '') {
+                        Fluttertoast.showToast(msg: 'No link detected');
+                      } else {
+                        setState(() {
+                          postController.text = value;
+                        });
+                      }
+                    });
+                  },
+                  child: Text(
+                    "Paste Link",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 0),
+                  onPressed: () async {
+                    await _getInstaPosts();
+                  },
+                  child: Text("Download Posts"),
+                ),
+              ),
+            ],
           ),
         ],
       ),

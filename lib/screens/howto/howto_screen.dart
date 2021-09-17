@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ArticleScreen extends StatefulWidget {
-  const ArticleScreen({Key? key}) : super(key: key);
+class HowToScreen extends StatefulWidget {
+  const HowToScreen({Key? key}) : super(key: key);
 
   @override
-  _ArticleScreenState createState() => _ArticleScreenState();
+  _HowToScreenState createState() => _HowToScreenState();
 }
 
-class _ArticleScreenState extends State<ArticleScreen> {
+class _HowToScreenState extends State<HowToScreen> {
   Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
     print('Refresing...');
@@ -21,8 +21,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
       onRefresh: _refresh,
       child: ListView.builder(
           physics: AlwaysScrollableScrollPhysics(),
-          itemCount: 10,
-          padding: EdgeInsets.all(10),
+          itemCount: 4,
+          padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 100),
           itemBuilder: (context, index) {
             return ArticleItem();
           }),
@@ -46,17 +46,17 @@ class ArticleItem extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-            ),
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.grey.shade300),
             width: size.width * 0.2,
             height: size.width * 0.2,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                'https://akcdn.detik.net.id/visual/2021/07/26/presiden-lanjutkan-ppkm-level-4_169.jpeg?w=650',
-                fit: BoxFit.cover,
-              ),
-            ),
+            // child: ClipRRect(
+            //   borderRadius: BorderRadius.circular(5),
+            //   child: Image.network(
+            //     'https://akcdn.detik.net.id/visual/2021/07/26/presiden-lanjutkan-ppkm-level-4_169.jpeg?w=650',
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
           ),
           Expanded(
             child: Column(

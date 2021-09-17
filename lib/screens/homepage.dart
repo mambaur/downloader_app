@@ -1,5 +1,6 @@
-import 'package:downloader/screens/articles/article_screen.dart';
-import 'package:downloader/screens/helps/help_screen.dart';
+import 'package:downloader/screens/dashboard/dashboard_screen.dart';
+import 'package:downloader/screens/howto/howto_screen.dart';
+import 'package:downloader/screens/about/about_screen.dart';
 import 'package:downloader/screens/instagram/instagram_downloader.dart';
 import 'package:downloader/screens/youtube_downloader.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +21,11 @@ class _HomePageState extends State<HomePage> {
   String titleBar = 'Instagram Downloader';
 
   final List<Widget> screens = [
+    DashboardScreen(),
     InstagramDownloader(),
     YoutubeDownloader(),
-    ArticleScreen(),
-    HelpScreen(),
+    HowToScreen(),
+    AboutScreen(),
   ];
 
   @override
@@ -52,9 +54,20 @@ class _HomePageState extends State<HomePage> {
       ),
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
+        backgroundColor:
+            currentTab != 0 ? Theme.of(context).primaryColor : Colors.white,
+        foregroundColor:
+            currentTab != 0 ? Colors.white : Theme.of(context).primaryColor,
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            currentScreen = screens[0];
+            currentTab = 0;
+            titleBar = 'Downloader';
+          });
+        },
       ),
+      extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
@@ -74,11 +87,11 @@ class _HomePageState extends State<HomePage> {
                       child: MenuIcon(
                           title: 'Insta',
                           icon: FontAwesomeIcons.instagram,
-                          color: currentTab == 0 ? Colors.blue : Colors.grey,
+                          color: currentTab == 1 ? Colors.blue : Colors.grey,
                           onTap: () {
                             setState(() {
-                              currentScreen = screens[0];
-                              currentTab = 0;
+                              currentScreen = screens[1];
+                              currentTab = 1;
                               titleBar = 'Instagram Downloader';
                             });
                           }),
@@ -87,11 +100,11 @@ class _HomePageState extends State<HomePage> {
                       child: MenuIcon(
                           title: 'Youtube',
                           icon: Icons.play_circle_outline,
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
+                          color: currentTab == 2 ? Colors.blue : Colors.grey,
                           onTap: () {
                             setState(() {
-                              currentScreen = screens[1];
-                              currentTab = 1;
+                              currentScreen = screens[2];
+                              currentTab = 2;
                               titleBar = 'Youtube Downloader';
                             });
                           }),
@@ -107,27 +120,27 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: MenuIcon(
-                          title: 'News',
+                          title: 'How To',
                           icon: FontAwesomeIcons.newspaper,
-                          color: currentTab == 2 ? Colors.blue : Colors.grey,
-                          onTap: () {
-                            setState(() {
-                              currentScreen = screens[2];
-                              currentTab = 2;
-                              titleBar = 'News';
-                            });
-                          }),
-                    ),
-                    Expanded(
-                      child: MenuIcon(
-                          title: 'Help',
-                          icon: FontAwesomeIcons.questionCircle,
                           color: currentTab == 3 ? Colors.blue : Colors.grey,
                           onTap: () {
                             setState(() {
                               currentScreen = screens[3];
                               currentTab = 3;
-                              titleBar = 'Help';
+                              titleBar = 'How To';
+                            });
+                          }),
+                    ),
+                    Expanded(
+                      child: MenuIcon(
+                          title: 'About',
+                          icon: FontAwesomeIcons.questionCircle,
+                          color: currentTab == 4 ? Colors.blue : Colors.grey,
+                          onTap: () {
+                            setState(() {
+                              currentScreen = screens[4];
+                              currentTab = 4;
+                              titleBar = 'About';
                             });
                           }),
                     ),

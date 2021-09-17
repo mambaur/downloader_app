@@ -56,6 +56,7 @@ class _InstagramDownloaderState extends State<InstagramDownloader>
             ),
           ],
         ),
+        elevation: 0,
       ),
       body: TabBarView(
         controller: _tabController,
