@@ -6,6 +6,7 @@ import 'package:downloader/screens/youtube_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:coachmaker/coachmaker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,10 +19,12 @@ class _HomePageState extends State<HomePage> {
   final PageStorageBucket bucket = PageStorageBucket();
   Widget? currentScreen;
   int currentTab = 0;
-  String titleBar = 'Instagram Downloader';
+  String titleBar = 'Downloader';
 
   final List<Widget> screens = [
-    DashboardScreen(),
+    DashboardScreen(
+      onGetStart: () {},
+    ),
     InstagramDownloader(),
     YoutubeDownloader(),
     HowToScreen(),
@@ -84,30 +87,36 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
-                      child: MenuIcon(
-                          title: 'Insta',
-                          icon: FontAwesomeIcons.instagram,
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
-                          onTap: () {
-                            setState(() {
-                              currentScreen = screens[1];
-                              currentTab = 1;
-                              titleBar = 'Instagram Downloader';
-                            });
-                          }),
+                      child: CoachPoint(
+                        initial: '1',
+                        child: MenuIcon(
+                            title: 'Insta',
+                            icon: FontAwesomeIcons.instagram,
+                            color: currentTab == 1 ? Colors.blue : Colors.grey,
+                            onTap: () {
+                              setState(() {
+                                currentScreen = screens[1];
+                                currentTab = 1;
+                                titleBar = 'Instagram Downloader';
+                              });
+                            }),
+                      ),
                     ),
                     Expanded(
-                      child: MenuIcon(
-                          title: 'Youtube',
-                          icon: Icons.play_circle_outline,
-                          color: currentTab == 2 ? Colors.blue : Colors.grey,
-                          onTap: () {
-                            setState(() {
-                              currentScreen = screens[2];
-                              currentTab = 2;
-                              titleBar = 'Youtube Downloader';
-                            });
-                          }),
+                      child: CoachPoint(
+                        initial: '2',
+                        child: MenuIcon(
+                            title: 'Youtube',
+                            icon: Icons.play_circle_outline,
+                            color: currentTab == 2 ? Colors.blue : Colors.grey,
+                            onTap: () {
+                              setState(() {
+                                currentScreen = screens[2];
+                                currentTab = 2;
+                                titleBar = 'Youtube Downloader';
+                              });
+                            }),
+                      ),
                     ),
                   ],
                 ),
@@ -119,30 +128,36 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
-                      child: MenuIcon(
-                          title: 'How To',
-                          icon: FontAwesomeIcons.newspaper,
-                          color: currentTab == 3 ? Colors.blue : Colors.grey,
-                          onTap: () {
-                            setState(() {
-                              currentScreen = screens[3];
-                              currentTab = 3;
-                              titleBar = 'How To';
-                            });
-                          }),
+                      child: CoachPoint(
+                        initial: '3',
+                        child: MenuIcon(
+                            title: 'How To',
+                            icon: FontAwesomeIcons.newspaper,
+                            color: currentTab == 3 ? Colors.blue : Colors.grey,
+                            onTap: () {
+                              setState(() {
+                                currentScreen = screens[3];
+                                currentTab = 3;
+                                titleBar = 'How To';
+                              });
+                            }),
+                      ),
                     ),
                     Expanded(
-                      child: MenuIcon(
-                          title: 'About',
-                          icon: FontAwesomeIcons.questionCircle,
-                          color: currentTab == 4 ? Colors.blue : Colors.grey,
-                          onTap: () {
-                            setState(() {
-                              currentScreen = screens[4];
-                              currentTab = 4;
-                              titleBar = 'About';
-                            });
-                          }),
+                      child: CoachPoint(
+                        initial: '4',
+                        child: MenuIcon(
+                            title: 'About',
+                            icon: FontAwesomeIcons.questionCircle,
+                            color: currentTab == 4 ? Colors.blue : Colors.grey,
+                            onTap: () {
+                              setState(() {
+                                currentScreen = screens[4];
+                                currentTab = 4;
+                                titleBar = 'About';
+                              });
+                            }),
+                      ),
                     ),
                   ],
                 ),

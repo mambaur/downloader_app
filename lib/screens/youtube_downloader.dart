@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:async';
 import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,43 +16,34 @@ class YoutubeDownloader extends StatefulWidget {
 }
 
 class _YoutubeDownloaderState extends State<YoutubeDownloader> {
-  final linkController = TextEditingController(
-      text: 'https://www.youtube.com/watch?v=DN0pG_0wUbI');
+  final linkController = TextEditingController();
 
-  String _extractedLink = 'Loading...';
   String youtubeTitle = 'Youtube Video';
-
-  // String youTubeLink = "https://www.youtube.com/watch?v=nRhYQlg8fVw";
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> extractYoutubeLink() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      _extractedLink = await FlutterYoutubeDownloader.extractYoutubeLink(
-          linkController.text, 18);
-    } on PlatformException {
-      _extractedLink = 'Failed to Extract YouTube Video Link.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-    // print(_extractedLink);
-  }
+  YoutubeDataModel? videoData;
 
   Future<void> downloadVideo() async {
     await _getStoragePermission();
-    YoutubeDataModel videoData = await YoutubeData.getData(linkController.text);
-    print(videoData.title);
 
-    if (videoData.title != null) {
-      youtubeTitle = videoData.title!;
+    EasyLoading.show(status: 'loading...', dismissOnTap: true);
+    try {
+      videoData = await YoutubeData.getData(linkController.text);
+      EasyLoading.dismiss();
+      setState(() {});
+      print(videoData!.title);
+
+      if (videoData!.title != null) {
+        youtubeTitle = videoData!.title!;
+      }
+
+      final result = await FlutterYoutubeDownloader.downloadVideo(
+          linkController.text, youtubeTitle + '.', 18);
+
+      print(result);
+      Fluttertoast.showToast(msg: 'Download Success');
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Your link is invalid');
+      EasyLoading.dismiss();
     }
-
-    final result = await FlutterYoutubeDownloader.downloadVideo(
-        linkController.text, youtubeTitle + '.', 18);
-    print(result);
   }
 
   Future _getStoragePermission() async {
@@ -67,85 +59,195 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
   @override
   void initState() {
     FlutterClipboard.paste().then((value) {
-      setState(() {
-        linkController.text = value;
-      });
+      if (value != '') {
+        final uri = Uri.parse(value);
+        if (uri.host == 'www.youtube.com') {
+          setState(() {
+            linkController.text = value;
+          });
+        }
+      }
     });
-
-    extractYoutubeLink();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        // child: Text('Extracted Link : $_extractedLink\n'),
-        child: Container(
-          margin: EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(5)),
-                child: TextField(
-                  controller: linkController,
-                  decoration: InputDecoration(
-                      hintText: "Paste your link here...",
-                      suffixIconConstraints: BoxConstraints(
-                        minWidth: 25,
-                        minHeight: 25,
-                      ),
-                      suffixIcon: GestureDetector(
-                          onTap: () => linkController.clear(),
-                          child: Icon(Icons.close)),
-                      border: InputBorder.none),
+      body: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(5)),
+              child: TextField(
+                controller: linkController,
+                decoration: InputDecoration(
+                    hintText: "Paste your link here...",
+                    suffixIconConstraints: BoxConstraints(
+                      minWidth: 25,
+                      minHeight: 25,
+                    ),
+                    suffixIcon: GestureDetector(
+                        onTap: () => linkController.clear(),
+                        child: Icon(Icons.close)),
+                    border: InputBorder.none),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        onPrimary: Theme.of(context).primaryColor,
+                        primary: Colors.grey.shade200,
+                        elevation: 0),
+                    onPressed: () async {
+                      FlutterClipboard.paste().then((value) {
+                        if (value == '') {
+                          Fluttertoast.showToast(msg: 'No link detected');
+                        } else {
+                          setState(() {
+                            linkController.text = value;
+                          });
+                        }
+                      });
+                    },
+                    child: Text(
+                      "Paste Link",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          onPrimary: Theme.of(context).primaryColor,
-                          primary: Colors.grey.shade200,
-                          elevation: 0),
-                      onPressed: () async {
-                        FlutterClipboard.paste().then((value) {
-                          if (value == '') {
-                            Fluttertoast.showToast(msg: 'No link detected');
-                          } else {
-                            setState(() {
-                              linkController.text = value;
-                            });
-                          }
-                        });
-                      },
-                      child: Text(
-                        "Paste Link",
-                        style: TextStyle(color: Colors.black),
-                      ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 0),
+                    onPressed: downloadVideo,
+                    child: Text("Download"),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            videoData != null
+                ? Container(
+                    margin: EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              offset: Offset(0, 1),
+                              blurRadius: 3,
+                              spreadRadius: 0)
+                        ]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: size.width * 0.25,
+                          height: size.width * 0.25,
+                          margin: EdgeInsets.all(10),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: videoData!.thumbnailUrl!,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.image,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  videoData!.title!,
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: size.width * 0.08,
+                                      height: size.width * 0.08,
+                                      margin: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.play_circle,
+                                        color: Colors.red.shade700,
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [Text(videoData!.authorName!)],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: size.width * 0.08,
+                                      height: size.width * 0.08,
+                                      margin: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green.shade700,
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [Text('Download success')],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 0),
-                      onPressed: downloadVideo,
-                      child: Text("Download"),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  )
+                : Container(),
+            SizedBox(
+              height: 100,
+            )
+          ],
         ),
       ),
     );
