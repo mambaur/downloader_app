@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Content {
   static data() {
     return <Map<String, dynamic>>[
-      {"title": "Cara Download Reels Instagram", "content": Container()}
+      {
+        "type": "Instagram",
+        "title": "How to Download Content from Instagram",
+        "icon": Icon(
+          FontAwesomeIcons.instagram,
+          size: 40,
+          color: Colors.grey,
+        ),
+        'route': '/instagram-tutorial'
+      },
+      {
+        "type": "Youtube",
+        "title": "How to Download Video from Youtube",
+        "icon": Icon(
+          Icons.play_circle_outline,
+          size: 40,
+          color: Colors.grey,
+        ),
+        'route': '/youtube-tutorial'
+      }
     ];
   }
 }

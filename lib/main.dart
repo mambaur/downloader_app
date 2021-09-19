@@ -1,4 +1,6 @@
 import 'package:downloader/screens/homepage.dart';
+import 'package:downloader/screens/howto/instagram-tutorial.dart';
+import 'package:downloader/screens/howto/youtube-tutorial.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -15,13 +17,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Instant Downloader',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      // home: HomePage(),
       debugShowCheckedModeBanner: false,
       builder: EasyLoading.init(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/instagram-tutorial': (context) => InstagramTutorial(),
+        '/youtube-tutorial': (context) => YoutubeTutorial(),
+      },
     );
   }
 }

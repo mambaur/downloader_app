@@ -37,6 +37,7 @@ dependencies:
   flutter_easyloading: ^3.0.3
   cached_network_image: ^3.1.0
   coachmaker: ^0.1.1
+  url_launcher: ^6.0.9
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -46,6 +47,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  change_app_package_name: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -62,6 +64,16 @@ flutter:
   assets:
     - assets/flat-people.png
     - assets/youtube.png
+    - assets/author.png
+    - assets/buymeacoffee.png
+    - assets/saweria.png
+    - assets/tutorials/instagram/instagram0.jpg
+    - assets/tutorials/instagram/instagram1.jpg
+    - assets/tutorials/instagram/instagram2.jpg
+    - assets/tutorials/instagram/instagram3.jpg
+    - assets/tutorials/youtube/youtube0.jpg
+    - assets/tutorials/youtube/youtube1.jpg
+    - assets/tutorials/youtube/youtube2.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

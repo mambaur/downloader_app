@@ -81,11 +81,15 @@ class _PostDownloaderState extends State<PostDownloader> {
 
     FlutterClipboard.paste().then((value) {
       if (value != '') {
-        final uri = Uri.parse(value);
-        if (uri.host == 'www.instagram.com') {
-          setState(() {
-            postController.text = value;
-          });
+        try {
+          final uri = Uri.parse(value);
+          if (uri.host == 'www.instagram.com') {
+            setState(() {
+              postController.text = value;
+            });
+          }
+        } catch (e) {
+          print('No url on clipboard');
         }
       }
     });

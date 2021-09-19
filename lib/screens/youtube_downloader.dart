@@ -60,11 +60,15 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
   void initState() {
     FlutterClipboard.paste().then((value) {
       if (value != '') {
-        final uri = Uri.parse(value);
-        if (uri.host == 'www.youtube.com') {
-          setState(() {
-            linkController.text = value;
-          });
+        try {
+          final uri = Uri.parse(value);
+          if (uri.host == 'www.youtube.com') {
+            setState(() {
+              linkController.text = value;
+            });
+          }
+        } catch (e) {
+          print('No url on clipboard');
         }
       }
     });
@@ -75,6 +79,7 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(10),

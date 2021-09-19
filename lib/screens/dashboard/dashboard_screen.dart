@@ -25,12 +25,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      height: size.height,
-      padding: EdgeInsets.all(10),
-      color: Theme.of(context).primaryColor,
-      child: Center(
+    return Scaffold(
+      // alignment: Alignment.center,
+      backgroundColor: Theme.of(context).primaryColor,
+      body: Container(
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(top: size.height * 0.1),
         child: SingleChildScrollView(
           child: Column(
             children: [
