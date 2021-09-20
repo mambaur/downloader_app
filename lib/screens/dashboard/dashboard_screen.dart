@@ -75,6 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   header: Icon(
                                     FontAwesomeIcons.instagram,
                                     size: 50,
+                                    color: Theme.of(context).primaryColor,
                                   )),
                               CoachModel(
                                   initial: '2',
@@ -87,6 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   header: Icon(
                                     Icons.play_circle_outline,
                                     size: 50,
+                                    color: Theme.of(context).primaryColor,
                                   )),
                               CoachModel(
                                   initial: '3',
@@ -99,6 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   header: Icon(
                                     FontAwesomeIcons.newspaper,
                                     size: 50,
+                                    color: Theme.of(context).primaryColor,
                                   )),
                               CoachModel(
                                   initial: '4',
@@ -111,6 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   header: Icon(
                                     FontAwesomeIcons.questionCircle,
                                     size: 50,
+                                    color: Theme.of(context).primaryColor,
                                   )),
                             ],
                             nextStep: CoachMakerControl.next,

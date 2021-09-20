@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
@@ -11,18 +14,36 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
+  String version = '...';
+
+  void getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+    setState(() {});
+  }
+
+  final InAppReview inAppReview = InAppReview.instance;
+
+  appReview() async {
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    } else {
+      Fluttertoast.showToast(msg: 'Rate no available');
+    }
+  }
+
   void _launchURL(String _url) async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
 
   @override
   void initState() {
+    getVersion();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -30,12 +51,12 @@ class _AboutScreenState extends State<AboutScreen> {
           child: Column(
             children: [
               ListTile(
-                onTap: () {},
+                onTap: () => appReview,
                 leading: Icon(FontAwesomeIcons.star),
                 title: Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Rate Instant Downloader',
+                      'Rate Instube Downloader',
                       style: TextStyle(fontSize: 14),
                     )),
               ),
@@ -50,25 +71,37 @@ class _AboutScreenState extends State<AboutScreen> {
                           Container(
                             width: 80,
                             height: 80,
-                            child: CircleAvatar(
-                              child: ClipRect(
-                                child: Image.asset(
-                                  'assets/author.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                            color: Colors.white,
+                            child: Image.asset(
+                              'assets/author.png',
+                              fit: BoxFit.cover,
                             ),
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           Text('Bauroziq - CRG Studio'),
-                          Text('Support at :'),
+                          GestureDetector(
+                              onTap: () {
+                                _launchURL('https://bauroziq.com');
+                              },
+                              child: Text('Bauroziq.com',
+                                  style: TextStyle(color: Colors.grey))),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text('Support at'),
+                          SizedBox(
+                            height: 15,
+                          ),
                           Container(
                             width: double.infinity,
                             child: ElevatedButton(
                                 onPressed: () =>
                                     _launchURL('https://saweria.co/bauroziq'),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white,
+                                    onPrimary: Theme.of(context).primaryColor),
                                 child: Row(
                                   children: [
                                     Image.asset(
@@ -80,7 +113,6 @@ class _AboutScreenState extends State<AboutScreen> {
                                     ),
                                     Text(
                                       'Saweria',
-                                      style: TextStyle(color: Colors.white),
                                     ),
                                   ],
                                 )),
@@ -142,7 +174,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 title: Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Version 1.0.0',
+                      'Version $version',
                       style: TextStyle(fontSize: 14),
                     )),
               )

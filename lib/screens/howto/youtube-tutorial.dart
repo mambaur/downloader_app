@@ -91,7 +91,7 @@ class _YoutubeTutorialState extends State<YoutubeTutorial> {
                                 height: 5,
                               ),
                               Text(
-                                  'Open Instant Downloader, Tab youtube on bottom navigation bar.'),
+                                  'Open Instube Downloader, Tab youtube on bottom navigation bar.'),
                               Container(
                                 margin: EdgeInsets.only(top: 10),
                                 child: ClipRRect(

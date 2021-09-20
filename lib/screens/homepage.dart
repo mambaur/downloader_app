@@ -19,7 +19,11 @@ class _HomePageState extends State<HomePage> {
   final PageStorageBucket bucket = PageStorageBucket();
   Widget? currentScreen;
   int currentTab = 0;
-  String titleBar = 'Downloader';
+  String titleBar = 'Instube Downloader';
+  Widget iconTitle = Image.asset(
+    'assets/icon-white.png',
+    width: 30,
+  );
 
   final List<Widget> screens = [
     DashboardScreen(
@@ -47,7 +51,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(titleBar),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconTitle,
+            SizedBox(
+              width: 5,
+            ),
+            Text(titleBar),
+          ],
+        ),
         elevation: 0,
         centerTitle: true,
       ),
@@ -61,12 +74,25 @@ class _HomePageState extends State<HomePage> {
             currentTab != 0 ? Theme.of(context).primaryColor : Colors.white,
         foregroundColor:
             currentTab != 0 ? Colors.white : Theme.of(context).primaryColor,
-        child: Icon(Icons.add),
+        // child: Icon(Icons.add),
+        child: currentTab == 0
+            ? Image.asset(
+                'assets/icon.png',
+                width: 30,
+              )
+            : Image.asset(
+                'assets/icon-white.png',
+                width: 30,
+              ),
         onPressed: () {
           setState(() {
             currentScreen = screens[0];
             currentTab = 0;
-            titleBar = 'Downloader';
+            titleBar = 'Instube Downloader';
+            iconTitle = Image.asset(
+              'assets/icon-white.png',
+              width: 30,
+            );
           });
         },
       ),
@@ -98,6 +124,10 @@ class _HomePageState extends State<HomePage> {
                                 currentScreen = screens[1];
                                 currentTab = 1;
                                 titleBar = 'Instagram Downloader';
+                                iconTitle = Icon(
+                                  FontAwesomeIcons.instagram,
+                                  size: 30,
+                                );
                               });
                             }),
                       ),
@@ -114,6 +144,10 @@ class _HomePageState extends State<HomePage> {
                                 currentScreen = screens[2];
                                 currentTab = 2;
                                 titleBar = 'Youtube Downloader';
+                                iconTitle = Icon(
+                                  Icons.play_circle_outline,
+                                  size: 30,
+                                );
                               });
                             }),
                       ),
@@ -139,6 +173,10 @@ class _HomePageState extends State<HomePage> {
                                 currentScreen = screens[3];
                                 currentTab = 3;
                                 titleBar = 'How To';
+                                iconTitle = Icon(
+                                  FontAwesomeIcons.newspaper,
+                                  size: 30,
+                                );
                               });
                             }),
                       ),
@@ -154,7 +192,11 @@ class _HomePageState extends State<HomePage> {
                               setState(() {
                                 currentScreen = screens[4];
                                 currentTab = 4;
-                                titleBar = 'About';
+                                titleBar = 'About Instube';
+                                iconTitle = Icon(
+                                  FontAwesomeIcons.questionCircle,
+                                  size: 30,
+                                );
                               });
                             }),
                       ),

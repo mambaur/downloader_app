@@ -99,7 +99,7 @@ class _InstagramTutorialState extends State<InstagramTutorial> {
                                 height: 5,
                               ),
                               Text(
-                                  'Open Instant Downloader, Tab Insta on bottom navigation bar.'),
+                                  'Open Instube Downloader, Tab Insta on bottom navigation bar.'),
                               Container(
                                 margin: EdgeInsets.only(top: 10),
                                 child: ClipRRect(
