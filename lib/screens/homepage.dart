@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                         initial: '3',
                         child: MenuIcon(
                             title: 'How To',
-                            icon: FontAwesomeIcons.newspaper,
+                            icon: FontAwesomeIcons.medapps,
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
                             onTap: () {
                               setState(() {
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                                 currentTab = 3;
                                 titleBar = 'How To';
                                 iconTitle = Icon(
-                                  FontAwesomeIcons.newspaper,
+                                  FontAwesomeIcons.medapps,
                                   size: 30,
                                 );
                               });

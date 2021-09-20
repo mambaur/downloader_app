@@ -52,8 +52,8 @@ class ArticleItem extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey.shade300),
-              width: size.width * 0.2,
-              height: size.width * 0.2,
+              width: size.width * 0.15,
+              height: size.width * 0.15,
               child: Center(
                 child: content['icon'],
               ),

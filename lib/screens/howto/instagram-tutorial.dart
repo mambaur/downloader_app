@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class InstagramTutorial extends StatefulWidget {
   const InstagramTutorial({Key? key}) : super(key: key);
@@ -8,6 +9,24 @@ class InstagramTutorial extends StatefulWidget {
 }
 
 class _InstagramTutorialState extends State<InstagramTutorial> {
+  BannerAd myBanner = BannerAd(
+      adUnitId: 'ca-app-pub-2465007971338713/2620740660',
+      // adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener());
+
+  loadAds() async {
+    await myBanner.load();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    loadAds();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,6 +41,22 @@ class _InstagramTutorialState extends State<InstagramTutorial> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    child: AdWidget(ad: myBanner),
+                    width: myBanner.size.width.toDouble(),
+                    height: myBanner.size.height.toDouble(),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Container(
               width: size.width,
               decoration: BoxDecoration(

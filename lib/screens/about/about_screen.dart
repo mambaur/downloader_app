@@ -170,7 +170,7 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
               ListTile(
                 onTap: () {},
-                leading: Icon(FontAwesomeIcons.infoCircle),
+                leading: Icon(FontAwesomeIcons.exclamationCircle),
                 title: Container(
                     padding: EdgeInsets.all(10),
                     child: Text(

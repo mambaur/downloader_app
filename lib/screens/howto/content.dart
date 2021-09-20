@@ -9,7 +9,7 @@ class Content {
         "title": "How to Download Content from Instagram",
         "icon": Icon(
           FontAwesomeIcons.instagram,
-          size: 40,
+          size: 35,
           color: Colors.grey,
         ),
         'route': '/instagram-tutorial'
@@ -19,7 +19,7 @@ class Content {
         "title": "How to Download Video from Youtube",
         "icon": Icon(
           Icons.play_circle_outline,
-          size: 40,
+          size: 35,
           color: Colors.grey,
         ),
         'route': '/youtube-tutorial'

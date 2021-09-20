@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:instagram_public_api/instagram_public_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,6 +23,18 @@ class _PostDownloaderState extends State<PostDownloader> {
   ReceivePort _port = ReceivePort();
   final postController = TextEditingController();
   List<InstaPost> posts = [];
+
+  BannerAd myBanner = BannerAd(
+      adUnitId: 'ca-app-pub-2465007971338713/2620740660',
+      // adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      size: AdSize.mediumRectangle,
+      request: AdRequest(),
+      listener: BannerAdListener());
+
+  loadAds() async {
+    await myBanner.load();
+    setState(() {});
+  }
 
   Future _getInstaPosts() async {
     posts = [];
@@ -65,19 +78,7 @@ class _PostDownloaderState extends State<PostDownloader> {
 
   @override
   void initState() {
-    EasyLoading.instance
-      ..displayDuration = const Duration(milliseconds: 2000)
-      ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-      ..loadingStyle = EasyLoadingStyle.dark
-      ..indicatorSize = 45.0
-      ..radius = 10.0
-      ..progressColor = Colors.yellow
-      ..backgroundColor = Colors.green
-      ..indicatorColor = Colors.yellow
-      ..textColor = Colors.yellow
-      ..maskColor = Colors.blue.withOpacity(0.5)
-      ..userInteractions = true
-      ..dismissOnTap = false;
+    loadAds();
 
     FlutterClipboard.paste().then((value) {
       if (value != '') {
@@ -123,7 +124,6 @@ class _PostDownloaderState extends State<PostDownloader> {
       physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
@@ -191,105 +191,121 @@ class _PostDownloaderState extends State<PostDownloader> {
           SizedBox(
             height: 10,
           ),
-          ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: posts.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            offset: Offset(0, 1),
-                            blurRadius: 3,
-                            spreadRadius: 0)
-                      ]),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: size.width * 0.25,
-                        height: size.width * 0.25,
-                        child: ClipRRect(
+          posts.length != 0
+              ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: posts.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 15),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          child: CachedNetworkImage(
-                            imageUrl: posts[index].thumbnailUrl!,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                offset: Offset(0, 1),
+                                blurRadius: 3,
+                                spreadRadius: 0)
+                          ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: size.width * 0.25,
+                            height: size.width * 0.25,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: posts[index].thumbnailUrl!,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    Center(child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => Icon(
+                                  Icons.image,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.image,
-                              color: Colors.grey,
-                            ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              Row(
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Column(
                                 children: [
-                                  Container(
-                                    width: size.width * 0.08,
-                                    height: size.width * 0.08,
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          posts[index].user.profilePicURL!),
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Text(posts[index].user.username!)
+                                      Container(
+                                        width: size.width * 0.08,
+                                        height: size.width * 0.08,
+                                        margin: EdgeInsets.only(right: 10),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              posts[index].user.profilePicURL!),
+                                        ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(posts[index].user.username!)
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: size.width * 0.08,
+                                        height: size.width * 0.08,
+                                        margin: EdgeInsets.only(right: 10),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green.shade700,
+                                        ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [Text('Download success')],
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: size.width * 0.08,
-                                    height: size.width * 0.08,
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green.shade700,
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [Text('Download success')],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  })
+              : Container(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  child: AdWidget(ad: myBanner),
+                  width: myBanner.size.width.toDouble(),
+                  height: myBanner.size.height.toDouble(),
+                ),
+              ),
+            ],
+          ),
           SizedBox(
             height: 100,
           )

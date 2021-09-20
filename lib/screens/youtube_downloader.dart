@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:async';
 import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:youtube_video_info/youtube.dart';
 
@@ -20,6 +21,38 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
 
   String youtubeTitle = 'Youtube Video';
   YoutubeDataModel? videoData;
+
+  final BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-2465007971338713/9921464426',
+    // adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+    size: AdSize.mediumRectangle,
+    request: AdRequest(),
+    listener: BannerAdListener(),
+  );
+
+  final AdSize adSize = AdSize(width: 320, height: 250);
+
+  final BannerAdListener listener = BannerAdListener(
+    // Called when an ad is successfully received.
+    onAdLoaded: (Ad ad) => print('Ad loaded.'),
+    // Called when an ad request failed.
+    onAdFailedToLoad: (Ad ad, LoadAdError error) {
+      // Dispose the ad here to free resources.
+      ad.dispose();
+      print('Ad failed to load: $error');
+    },
+    // Called when an ad opens an overlay that covers the screen.
+    onAdOpened: (Ad ad) => print('Ad opened.'),
+    // Called when an ad removes an overlay that covers the screen.
+    onAdClosed: (Ad ad) => print('Ad closed.'),
+    // Called when an impression occurs on the ad.
+    onAdImpression: (Ad ad) => print('Ad impression.'),
+  );
+
+  loadAds() async {
+    await myBanner.load();
+    setState(() {});
+  }
 
   Future<void> downloadVideo() async {
     await _getStoragePermission();
@@ -72,6 +105,7 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
         }
       }
     });
+    loadAds();
     super.initState();
   }
 
@@ -249,9 +283,23 @@ class _YoutubeDownloaderState extends State<YoutubeDownloader> {
                     ),
                   )
                 : Container(),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: AdWidget(ad: myBanner),
+                    width: myBanner.size.width.toDouble(),
+                    height: myBanner.size.height.toDouble(),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
               height: 100,
-            )
+            ),
           ],
         ),
       ),
