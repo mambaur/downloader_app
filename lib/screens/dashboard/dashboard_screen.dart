@@ -99,7 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     // 'Next Description',
                                   ],
                                   header: Icon(
-                                    FontAwesomeIcons.newspaper,
+                                    FontAwesomeIcons.medapps,
                                     size: 50,
                                     color: Theme.of(context).primaryColor,
                                   )),

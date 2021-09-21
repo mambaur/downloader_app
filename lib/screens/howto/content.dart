@@ -10,7 +10,7 @@ class Content {
         "icon": Icon(
           FontAwesomeIcons.instagram,
           size: 35,
-          color: Colors.grey,
+          color: Colors.blue.shade600,
         ),
         'route': '/instagram-tutorial'
       },
@@ -20,7 +20,7 @@ class Content {
         "icon": Icon(
           Icons.play_circle_outline,
           size: 35,
-          color: Colors.grey,
+          color: Colors.blue.shade600,
         ),
         'route': '/youtube-tutorial'
       }
