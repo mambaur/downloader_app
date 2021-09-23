@@ -169,8 +169,62 @@ class _AboutScreenState extends State<AboutScreen> {
                     )),
               ),
               ListTile(
+                onTap: () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Disclaimer'),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Instube Downloader is an application for instagram and youtube media download. It is not linked or associated with Instagram and Youtube Application. Kindly download Instagram or Youtube media with the consent of respective owner as to not violate any Copyrights.',
+                          )
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      Center(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('Go Back'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                leading: Icon(FontAwesomeIcons.fileArchive),
+                title: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Disclaimer',
+                      style: TextStyle(fontSize: 14),
+                    )),
+              ),
+              ListTile(
+                onTap: () => _launchURL(
+                    'https://instubedownloader.blogspot.com/p/privacy-policy.html'),
+                leading: Icon(FontAwesomeIcons.file),
+                title: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Privacy Policy',
+                      style: TextStyle(fontSize: 14),
+                    )),
+              ),
+              ListTile(
+                onTap: () => _launchURL(
+                    'https://instubedownloader.blogspot.com/p/terms-and-conditions.html'),
+                leading: Icon(FontAwesomeIcons.fileAlt),
+                title: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Terms and Conditions',
+                      style: TextStyle(fontSize: 14),
+                    )),
+              ),
+              ListTile(
                 onTap: () {},
-                leading: Icon(FontAwesomeIcons.exclamationCircle),
+                leading: Icon(Icons.show_chart_outlined),
                 title: Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
