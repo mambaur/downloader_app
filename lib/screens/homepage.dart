@@ -116,55 +116,6 @@ class _HomePageState extends State<HomePage> {
                       child: CoachPoint(
                         initial: '1',
                         child: MenuIcon(
-                            title: 'Insta',
-                            icon: FontAwesomeIcons.instagram,
-                            color: currentTab == 1 ? Colors.blue : Colors.grey,
-                            onTap: () {
-                              setState(() {
-                                currentScreen = screens[1];
-                                currentTab = 1;
-                                titleBar = 'Instagram Downloader';
-                                iconTitle = Icon(
-                                  FontAwesomeIcons.instagram,
-                                  size: 30,
-                                );
-                              });
-                            }),
-                      ),
-                    ),
-                    Expanded(
-                      child: CoachPoint(
-                        initial: '2',
-                        child: MenuIcon(
-                            title: 'Youtube',
-                            icon: Icons.play_circle_outline,
-                            color: currentTab == 2 ? Colors.blue : Colors.grey,
-                            onTap: () {
-                              setState(() {
-                                currentScreen = screens[2];
-                                currentTab = 2;
-                                titleBar = 'Youtube Downloader';
-                                iconTitle = Icon(
-                                  Icons.play_circle_outline,
-                                  size: 30,
-                                );
-                              });
-                            }),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(flex: 2, child: Container()),
-              Expanded(
-                flex: 3,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: CoachPoint(
-                        initial: '3',
-                        child: MenuIcon(
                             title: 'How To',
                             icon: FontAwesomeIcons.medapps,
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
@@ -181,9 +132,78 @@ class _HomePageState extends State<HomePage> {
                             }),
                       ),
                     ),
+                    // Expanded(
+                    //   child: CoachPoint(
+                    //     initial: '1',
+                    //     child: MenuIcon(
+                    //         title: 'Insta',
+                    //         icon: FontAwesomeIcons.instagram,
+                    //         color: currentTab == 1 ? Colors.blue : Colors.grey,
+                    //         onTap: () {
+                    //           setState(() {
+                    //             currentScreen = screens[1];
+                    //             currentTab = 1;
+                    //             titleBar = 'Instagram Downloader';
+                    //             iconTitle = Icon(
+                    //               FontAwesomeIcons.instagram,
+                    //               size: 30,
+                    //             );
+                    //           });
+                    //         }),
+                    //   ),
+                    // ),
+                    // Expanded(
+                    //   child: CoachPoint(
+                    //     initial: '2',
+                    //     child: MenuIcon(
+                    //         title: 'Youtube',
+                    //         icon: Icons.play_circle_outline,
+                    //         color: currentTab == 2 ? Colors.blue : Colors.grey,
+                    //         onTap: () {
+                    //           setState(() {
+                    //             currentScreen = screens[2];
+                    //             currentTab = 2;
+                    //             titleBar = 'Youtube Downloader';
+                    //             iconTitle = Icon(
+                    //               Icons.play_circle_outline,
+                    //               size: 30,
+                    //             );
+                    //           });
+                    //         }),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+              Expanded(flex: 2, child: Container()),
+              Expanded(
+                flex: 3,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Expanded(
+                    //   child: CoachPoint(
+                    //     initial: '3',
+                    //     child: MenuIcon(
+                    //         title: 'How To',
+                    //         icon: FontAwesomeIcons.medapps,
+                    //         color: currentTab == 3 ? Colors.blue : Colors.grey,
+                    //         onTap: () {
+                    //           setState(() {
+                    //             currentScreen = screens[3];
+                    //             currentTab = 3;
+                    //             titleBar = 'How To';
+                    //             iconTitle = Icon(
+                    //               FontAwesomeIcons.medapps,
+                    //               size: 30,
+                    //             );
+                    //           });
+                    //         }),
+                    //   ),
+                    // ),
                     Expanded(
                       child: CoachPoint(
-                        initial: '4',
+                        initial: '2',
                         child: MenuIcon(
                             title: 'About',
                             icon: FontAwesomeIcons.questionCircle,

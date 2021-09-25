@@ -177,7 +177,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       child: Column(
                         children: [
                           Text(
-                            'Instube Downloader is an application for instagram and youtube media download. It is not linked or associated with Instagram and Youtube Application. Kindly download Instagram or Youtube media with the consent of respective owner as to not violate any Copyrights.',
+                            'Instube Downloader is an application for instagram media download. It is not linked or associated with Instagram Application. Kindly download Instagram media with the consent of respective owner as to not violate any Copyrights.',
                           )
                         ],
                       ),

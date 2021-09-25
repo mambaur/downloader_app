@@ -1,4 +1,5 @@
 import 'package:downloader/screens/howto/content.dart';
+import 'package:downloader/screens/howto/instagram-tutorial.dart';
 import 'package:flutter/material.dart';
 
 class HowToScreen extends StatefulWidget {
@@ -18,18 +19,19 @@ class _HowToScreenState extends State<HowToScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      backgroundColor: Colors.white,
-      displacement: 20,
-      onRefresh: _refresh,
-      child: ListView.builder(
-          physics: AlwaysScrollableScrollPhysics(),
-          itemCount: content.length,
-          padding: EdgeInsets.only(top: 15, bottom: 100),
-          itemBuilder: (context, index) {
-            return ArticleItem(content: content[index]);
-          }),
-    );
+    return InstagramTutorial();
+    // return RefreshIndicator(
+    //   backgroundColor: Colors.white,
+    //   displacement: 20,
+    //   onRefresh: _refresh,
+    //   child: ListView.builder(
+    //       physics: AlwaysScrollableScrollPhysics(),
+    //       itemCount: content.length,
+    //       padding: EdgeInsets.only(top: 15, bottom: 100),
+    //       itemBuilder: (context, index) {
+    //         return ArticleItem(content: content[index]);
+    //       }),
+    // );
   }
 }
 

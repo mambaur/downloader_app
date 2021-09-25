@@ -31,11 +31,11 @@ class _InstagramTutorialState extends State<InstagramTutorial> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        title: Text('Instagram Tutorial'),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   elevation: 0,
+      //   title: Text('Instagram Tutorial'),
+      // ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(10),
@@ -187,6 +187,9 @@ class _InstagramTutorialState extends State<InstagramTutorial> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 100,
+            )
           ],
         ),
       ),
